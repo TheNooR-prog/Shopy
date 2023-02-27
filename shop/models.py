@@ -80,7 +80,15 @@ class Look(models.Model):
         ordering = ('position',)
 
 
+class Size(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 class Item(models.Model):
+
     name = models.CharField(unique=True, max_length=200, db_index=True)
     slug = models.SlugField(max_length=250, db_index=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
@@ -93,7 +101,7 @@ class Item(models.Model):
     is_trending = models.BooleanField(default=False)
     item_type = models.ForeignKey(ItemType, on_delete=models.CASCADE)
     look = models.ForeignKey(Look, on_delete=models.SET_NULL, blank=True, null=True)
-    # size
+    sizes = models.ManyToManyField(Size)
     # colour
 
     def __str__(self):
@@ -102,3 +110,4 @@ class Item(models.Model):
     class Meta:
         ordering = ('position',)
         index_together = (('id', 'slug'), )
+
